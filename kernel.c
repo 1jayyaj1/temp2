@@ -29,6 +29,11 @@ void boot() {
     system(command);
 }
 
+int interrupt() {
+    //TO IMPLEMENT
+    return 0;
+}
+
 int main(int argc, char const *argv[])
 {
     int error = 0;
