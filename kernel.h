@@ -26,7 +26,7 @@ ERRORCODE 0 : NO ERROR
 ERRORCODE -3 : SCRIPT NOT FOUND
 ERRORCODE -5 : NOT ENOUGH RAM (EXEC)
 */
-int myinit(char*);
+PCB* myinit(int pages_max, int PID);
 
 int scheduler();
 

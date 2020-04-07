@@ -1,3 +1,8 @@
-set y 20
-print y
-quit
+set b 2
+print b
+set c 3
+print c
+set d 4
+print d
+set e 5
+print e

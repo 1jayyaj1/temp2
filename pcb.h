@@ -1,3 +1,5 @@
+#ifndef PCB_H
+#define PCB_H
 /*
 PCB has 3 fields
 PC : Points to the the current line reached for that program
@@ -10,6 +12,7 @@ typedef struct PCB
     int PC_page;
     int PC_offset;
     int pages_max;
+    int PID;
     int pageTable[10];
 }PCB;
 
@@ -20,4 +23,5 @@ PC = start
 start = start
 end = end
 */
-PCB* makePCB(int pages_max);
+PCB* makePCB(int pages_max, int PID);
+#endif

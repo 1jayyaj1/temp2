@@ -12,6 +12,7 @@ typedef struct PCB
     int PC_page;
     int PC_offset;
     int pages_max;
+    int PID;
     int pageTable[10];
 }PCB;
 
@@ -22,11 +23,12 @@ PC = start
 start = start
 end = end
 */
-PCB* makePCB(int pages_max){
+PCB* makePCB(int pages_max, int PID){
     PCB* pcb = (PCB*)malloc(sizeof(PCB));
     pcb->PC = pcb->PC_page + pcb->PC_offset;
     pcb->PC_page = 0;
     pcb->PC_offset = 0;
+    pcb->PID = PID;
     pcb->pages_max = pages_max;
     return pcb;
 }

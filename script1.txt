@@ -1,3 +1,3 @@
-set x 10
-print x
+set a 1
+print a
 quit

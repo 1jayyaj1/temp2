@@ -94,23 +94,23 @@ ERRORCODE 0 : NO ERROR
 ERRORCODE -3 : SCRIPT NOT FOUND
 ERRORCODE -5 : NOT ENOUGH RAM (EXEC)
 */
-int myinit(char* filename){
+PCB* myinit(int pages_max, int PID){
     // Open the filename to get FILE *
     // call addToRam on that File *
     // If error (check via start/end variable), return that error
     // Else create pcb using MakePCB
     // Then add it to the ReadyQueue
-    FILE * fp = fopen(filename,"r");
-    if (fp == NULL) return -3;
-    int start;
-    int end;
-    addToRAM(fp,&start,&end);
-    fclose(fp);
-    int pages_max = 0; //To be updates for assignment 3
-    if (start == -1) return -5;
-    PCB* pcb = makePCB(pages_max);
-    addToReady(pcb);
-    return 0;
+    // FILE * fp = fopen(filename,"r");
+    // if (fp == NULL) return -3;
+    // int start;
+    // int end;
+    // addToRAM(fp,&start,&end);
+    // fclose(fp);
+    // if (start == -1) return -5;
+        // addToReady(pcb);
+    // return 0;
+    PCB* pcb = makePCB(pages_max, PID);
+    return pcb;
 }
 
 int scheduler(){

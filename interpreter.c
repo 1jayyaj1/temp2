@@ -4,6 +4,7 @@
 #include"shellmemory.h"
 #include"shell.h"
 #include"kernel.h"
+#include"memorymanager.h"
 
 #define TRUE 1
 #define FALSE 0
@@ -102,7 +103,9 @@ int exec(char * words[]){
             } else {
                 filename[nextFree] = strdup(words[i]);
                 nextFree++;
-                errorCode = myinit(words[i]);
+                FILE* fp = fopen(words[i],"r");
+                if (fp == NULL) return -3;
+                errorCode = launcher(fp);
                 if ( errorCode < 0){
                     displayCode(errorCode,words[i]);
                     printf("EXEC COMMAND ABORTED...\n");
