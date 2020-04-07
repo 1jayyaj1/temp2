@@ -7,9 +7,9 @@ int nextFree = 0;
 
 /*
 Ram structure implemented as an array.
-Size is 1000 strings
+Size is 40 strings
 */
-char *ram[1000]; 
+char *ram[40] = { NULL }; 
 
 /*
 This function will delete the content in ram between the 2 indices parameters (inclusive)
@@ -34,12 +34,12 @@ end : pointer to variable which will store the index of last line of file in ram
 void addToRAM (FILE *p, int *start, int *end){
     *start = nextFree;
     int i = *start;
-    char buffer[1000];
+    char buffer[40];
     // Copy content of the file while
     // we have not reached the end of the file
     // and RAM is not full yet.
-    while (!feof(p) && i<1000){
-        fgets(buffer,999,p);
+    while (!feof(p) && i<40){
+        fgets(buffer,39,p);
         ram[i]= strdup(buffer);
         i++;
     }
@@ -47,7 +47,7 @@ void addToRAM (FILE *p, int *start, int *end){
     // file, remove the content from RAM and return -1 in *start,*end
     // Update nextFree as well
     
-    if (i>=1000 && !feof(p)){
+    if (i>=40 && !feof(p)){
         removeFromRam(0,i-1);
         nextFree = 0;
         *start = -1;

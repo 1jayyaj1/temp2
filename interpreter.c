@@ -59,10 +59,10 @@ static int run(char * words[]){
     int errorCode = 0;
     // if file cannot be opened, return ERRORCODE -3
     if (fp==NULL) return -3;
-    char buffer[1000];
+    char buffer[40];
     printf("/////////////////////////////// STARTING EXECUTION OF %s ///////////////////////////////\n",filename);
     while (!feof(fp)){
-        fgets(buffer,999,fp);
+        fgets(buffer,39,fp);
         errorCode = parse(buffer);
         // User input the "quit" command. Terminate execution of this script file.
         if (errorCode == 1) {

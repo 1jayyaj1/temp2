@@ -1,8 +1,9 @@
 #define DEFAULT_QUANTA 2
 
 struct CPU { 
-    int IP; 
-    char IR[1000]; 
+    int IP;
+    int offset; 
+    char IR[40]; 
     int quanta; 
 } CPU;
 

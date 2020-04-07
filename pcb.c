@@ -9,8 +9,10 @@ end: Points to last line of that program
 typedef struct PCB
 {
     int PC;
-    int start;
-    int end;
+    int PC_page;
+    int PC_offset;
+    int pages_max;
+    int pageTable[10];
 }PCB;
 
 
