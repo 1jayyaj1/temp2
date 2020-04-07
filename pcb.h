@@ -20,4 +20,4 @@ PC = start
 start = start
 end = end
 */
-PCB* makePCB(int start, int end);
+PCB* makePCB(int pages_max);

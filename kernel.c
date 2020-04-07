@@ -106,8 +106,9 @@ int myinit(char* filename){
     int end;
     addToRAM(fp,&start,&end);
     fclose(fp);
+    int pages_max = 0; //To be updates for assignment 3
     if (start == -1) return -5;
-    PCB* pcb = makePCB(start,end);
+    PCB* pcb = makePCB(pages_max);
     addToReady(pcb);
     return 0;
 }
@@ -123,7 +124,8 @@ int scheduler(){
         CPU.IP = pcb->PC;
 
         int isOver = FALSE;
-        int remaining = (pcb->end) - (pcb->PC) + 1;
+        int remaining = 0; //To update for assignment 3
+        //remaining = (pcb->end) - (pcb->PC) + 1; To update for assignment 3
         int quanta = DEFAULT_QUANTA;
 
         if (DEFAULT_QUANTA >= remaining) {
@@ -134,7 +136,7 @@ int scheduler(){
         int errorCode = run(quanta);
 
         if ( errorCode!=0 || isOver ){
-            removeFromRam(pcb->start,pcb->end);
+            //removeFromRam(pcb->start,pcb->end); To update for assignment 3
             free(pcb);
         } else {
             pcb->PC += DEFAULT_QUANTA;

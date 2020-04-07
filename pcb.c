@@ -15,7 +15,6 @@ typedef struct PCB
     int pageTable[10];
 }PCB;
 
-
 /*
 Passes 2 parameters (start , end)
 This method creates a PCB with fields set as this:
@@ -23,11 +22,12 @@ PC = start
 start = start
 end = end
 */
-PCB* makePCB(int start, int end){
+PCB* makePCB(int pages_max){
     PCB* pcb = (PCB*)malloc(sizeof(PCB));
-    pcb->PC = start;
-    pcb->start = start;
-    pcb->end = end;
+    pcb->PC = pcb->PC_page + pcb->PC_offset;
+    pcb->PC_page = 0;
+    pcb->PC_offset = 0;
+    pcb->pages_max = pages_max;
     return pcb;
 }
 
