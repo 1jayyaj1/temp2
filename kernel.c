@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include <string.h>
 #include"shell.h"
 #include"pcb.h"
 #include"ram.h"
@@ -22,9 +23,16 @@ ReadyQueueNode* head = NULL;
 ReadyQueueNode* tail = NULL;
 int sizeOfQueue = 0;
 
+void boot() {
+    char command[50];
+    strcpy(command, "rm -rf BackingStore && mkdir BackingStore");
+    system(command);
+}
+
 int main(int argc, char const *argv[])
 {
     int error = 0;
+    boot();
     error = kernel();
     return error;
 }
