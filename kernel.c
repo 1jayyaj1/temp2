@@ -6,6 +6,7 @@
 #include"ram.h"
 #include"cpu.h"
 #include"interpreter.h"
+#include"memorymanager.h"
 
 /*
 This is a node in the Ready Queue implemented as 
@@ -28,11 +29,6 @@ void boot() {
     char command[50];
     strcpy(command, "rm -rf BackingStore && mkdir BackingStore");
     system(command);
-}
-
-int interrupt() {
-    //TO IMPLEMENT
-    return 0;
 }
 
 int main(int argc, char const *argv[])
@@ -109,23 +105,44 @@ ERRORCODE -3 : SCRIPT NOT FOUND
 ERRORCODE -5 : NOT ENOUGH RAM (EXEC)
 */
 PCB* myinit(int pages_max, int PID){
-    // Open the filename to get FILE *
-    // call addToRam on that File *
-    // If error (check via start/end variable), return that error
-    // Else create pcb using MakePCB
-    // Then add it to the ReadyQueue
-    // FILE * fp = fopen(filename,"r");
-    // if (fp == NULL) return -3;
-    // int start;
-    // int end;
-    // addToRAM(fp,&start,&end);
-    // fclose(fp);
-    // if (start == -1) return -5;
-        // addToReady(pcb);
-    // return 0;
     PCB* pcb = makePCB(pages_max, PID);
     addToReady(pcb);
     return pcb;
+}
+
+int interrupt(PCB* pcb) {
+    //TO IMPLEMENT
+    int next_page = pcb->PC_page + 1;
+    if (next_page >= pcb->pages_max) {
+        for (int i = 0; i < 10; i++) {
+            if (pcb->pageTable[i] != -1) {
+                removeFromRam(pcb->pageTable[i]);
+            }
+        }
+        free(pcb);
+        return 0;
+    } else {
+        if (pcb->pageTable[next_page] == -1) {
+            int next_frame = findFrame();
+            if (next_frame == -1) {
+                next_frame = findVictim(pcb);
+                updatePageTable(pcb, next_page, next_frame, 1);
+            } else {
+                updatePageTable(pcb, next_page, next_frame, -1);
+            }
+            char curr_file[50];
+            snprintf(curr_file, sizeof(curr_file), "./BackingStore/%d.txt", pcb->PID);
+            FILE *to_load = fopen(curr_file, "r"); 
+            loadPage(next_page, to_load, next_frame);
+            fclose(to_load);
+            //printRam();
+        }
+        pcb->PC_page = next_page;
+        pcb->PC_offset = 0;
+        pcb->PC = pcb->PC_page + pcb->PC_offset;
+        addToReady(pcb);
+    }
+    return 0;
 }
 
 int scheduler(){
@@ -136,25 +153,29 @@ int scheduler(){
         //pop head of queue
         PCB* pcb = pop();
         //copy PC of PCB to IP of CPU
-        CPU.IP = pcb->PC;
-
+        CPU.IP = pcb->pageTable[pcb->PC_page];
+        printf("Current IP is: %d\n", CPU.IP);
+        CPU.offset = pcb->PC_offset;
+        printf("Current Offset is: %d\n", CPU.offset);
         int isOver = FALSE;
-        int remaining = 0; //To update for assignment 3
-        //remaining = (pcb->end) - (pcb->PC) + 1; To update for assignment 3
+        int remaining = 0;
         int quanta = DEFAULT_QUANTA;
-
-        if (DEFAULT_QUANTA >= remaining) {
-            isOver = TRUE;
-            quanta = remaining;
-        }
-
         int errorCode = run(quanta);
-
-        if ( errorCode!=0 || isOver ){
-            //removeFromRam(pcb->start,pcb->end); To update for assignment 3
+        if ( errorCode!=0 ){
+            for (int i = 0; i < 10; i++) {
+                if (pcb->pageTable[i] != -1) {
+                    removeFromRam(pcb->pageTable[i]);
+                }
+            }
             free(pcb);
+        } 
+        if (CPU.offset == 4) {
+            //PC_page = 0, PC_offset = 4, PC = PC_page = 0 (not updated yet)
+            interrupt(pcb);
+            //PC_page = 1, PC_offset = 0, PC = 1 + 0 = 0
         } else {
-            pcb->PC += DEFAULT_QUANTA;
+            pcb->PC_offset = CPU.offset;
+            pcb->PC = pcb->PC_page + pcb->PC_offset;
             addToReady(pcb);
         }
     }

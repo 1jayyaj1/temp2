@@ -14,14 +14,14 @@ p : file pointer
 start : pointer to variable which will store the index of first line of file in ram
 end : pointer to variable which will store the index of last line of file in ram
 */
-void addToRAM (FILE *, int *, int *);
+// void addToRAM (FILE *, int *, int *);
 
 /*
 This function will delete the content in ram between the 2 indices parameters (inclusive)
 start : pointer to variable which will store the index of first line of file in ram
 end : pointer to variable which will store the index of last line of file in ram
 */
-void removeFromRam (int, int);
+void removeFromRam (int frameNumber);
 
 /*
 Reset the pointer to the free cell back to index 0

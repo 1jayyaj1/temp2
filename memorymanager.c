@@ -26,7 +26,7 @@ int countTotalPages(FILE *f) {
 
 //IF I HAVE TIME, MAKE IT FIFO INSTEAD
 int findFrame() {
-    for (int i = 0; i <= 36; i = i + 4) {
+    for (int i = 0; i < 10; i++) {
         if (isFrameFree(i) == 1) {
             return i;
         }
@@ -44,10 +44,10 @@ int isFrameInPageTable(int frameNumber, PCB *p) {
 }
 
 int findVictim(PCB *p) {
-    int victimFrameNumber = 4 * (rand() % (9 + 1 - 0) + 0);
+    int victimFrameNumber = (rand() % (9 + 1 - 0) + 0);
     if (isFrameInPageTable(victimFrameNumber, p) == -1) {
         while (isFrameInPageTable(victimFrameNumber, p) != 1) {
-            victimFrameNumber = (victimFrameNumber + 4) % 39;
+            victimFrameNumber = (victimFrameNumber + 1) % 9;
         }
     }
     return victimFrameNumber;
@@ -71,10 +71,19 @@ void loadPage(int pageNumber, FILE *f, int frameNumber) {
     int lineNumberEnd = lineNumberStart + 4;
     char line[256];
     int i = 0;
+    int j = 0;
+    //printf("start: %d\n", lineNumberStart);
+    //printf("end: %d\n", lineNumberEnd);
     while (fgets(line, sizeof(line), f)) {
         if(i >= lineNumberStart && i < lineNumberEnd) {
-            setRamCell(frameNumber + i, strdup(line)); 
+            //printf("Curr i is: %d\n", i);
+            //printf("start ram cell num: %d\n", (frameNumber + i));
+            if (j < 4) {
+                setRamCell(4 * frameNumber + j, strdup(line)); 
+                j++;
+            }
         } else if (i == lineNumberEnd) {
+            //printf("done\n");
             break;
         }
         i++;
@@ -112,6 +121,6 @@ int launcher(FILE *p) {
     FILE *to_load = fopen(new_file, "r");
     loadPage(pageNumber, to_load, frameNumber);
     currPid++;
-    printRam();
+    //printRam();
     return 1; //Don't forget to return a 0 whenever this fct can fuck up so that I can handle it in interpreter.c
 }

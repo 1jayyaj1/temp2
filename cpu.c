@@ -27,18 +27,20 @@ int run(int quanta){
 
     for (int i = 0; i < quanta; i++)
     {
-        strcpy(CPU.IR,ram[CPU.IP]);
+        strcpy(CPU.IR,ram[(4*CPU.IP)+CPU.offset]);
+        printf("Curr ram line executed by cpu: %d\n", CPU.IP+CPU.offset);
+        //printf("CPU executing current line: %s\n", CPU.IR);
         int errorCode = parse(CPU.IR);
         // Do error checking and if error, return error
         if (errorCode != 0){
             // Display error message if fatal
             if (errorCode < 0){
-                ram[CPU.IP][strlen(ram[CPU.IP])-2]='\0';
-                displayCode(errorCode,ram[CPU.IP]);
+                ram[(4*CPU.IP)+CPU.offset][strlen(ram[(4*CPU.IP)+CPU.offset])-2]='\0';
+                displayCode(errorCode,ram[(4*CPU.IP)+CPU.offset]);
             }
             return errorCode;
         }
-        CPU.IP ++;
+        CPU.offset++;
     }
     return 0;
 }

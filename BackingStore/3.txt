@@ -1,4 +1,8 @@
-set a 1
-print a
-set y 26
-print y
+set f 6
+print f
+set g 7
+print g
+set h 8
+print h
+set i 9
+print i

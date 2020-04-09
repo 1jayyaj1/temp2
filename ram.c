@@ -17,9 +17,10 @@ This function will delete the content in ram between the 2 indices parameters (i
 start : pointer to variable which will store the index of first line of file in ram
 end : pointer to variable which will store the index of last line of file in ram
 */
-void removeFromRam (int start, int end){
-    for (int i = start; i <= end; i++)
-    {
+void removeFromRam (int frameNumber){
+    int startFrame = 4 * frameNumber;
+    int endFrame = startFrame + 4;
+    for (int i = startFrame; i < endFrame; i++) {
         ram[i] = NULL;
     }
 }
@@ -29,7 +30,8 @@ void setRamCell(int ramCell, char* fileLine) {
 }
 
 int isFrameFree (int frameNumber){
-    if (ram[frameNumber] == NULL) {
+    int startFrame = 4 * frameNumber;
+    if (ram[startFrame] == NULL) {
             return 1;
     }
     return -1;
@@ -43,33 +45,33 @@ p : file pointer
 start : pointer to variable which will store the index of first line of file in ram
 end : pointer to variable which will store the index of last line of file in ram
 */
-void addToRAM (FILE *p, int *start, int *end){
-    *start = nextFree;
-    int i = *start;
-    char buffer[40];
-    // Copy content of the file while
-    // we have not reached the end of the file
-    // and RAM is not full yet.
-    while (!feof(p) && i<40){
-        fgets(buffer,39,p);
-        ram[i]= strdup(buffer);
-        i++;
-    }
-    // If RAM is full and we have not reached the end of the 
-    // file, remove the content from RAM and return -1 in *start,*end
-    // Update nextFree as well
+// void addToRAM (FILE *p, int *start, int *end){
+//     *start = nextFree;
+//     int i = *start;
+//     char buffer[40];
+//     // Copy content of the file while
+//     // we have not reached the end of the file
+//     // and RAM is not full yet.
+//     while (!feof(p) && i<40){
+//         fgets(buffer,39,p);
+//         ram[i]= strdup(buffer);
+//         i++;
+//     }
+//     // If RAM is full and we have not reached the end of the 
+//     // file, remove the content from RAM and return -1 in *start,*end
+//     // Update nextFree as well
     
-    if (i>=40 && !feof(p)){
-        removeFromRam(0,i-1);
-        nextFree = 0;
-        *start = -1;
-        *end = -1;        
-    // Else update the nextFree spot and *end
-    } else {
-        nextFree=i;
-        *end=i-1;
-    }
-}
+//     if (i>=40 && !feof(p)){
+//         removeFromRam(0,i-1);
+//         nextFree = 0;
+//         *start = -1;
+//         *end = -1;        
+//     // Else update the nextFree spot and *end
+//     } else {
+//         nextFree=i;
+//         *end=i-1;
+//     }
+// }
 
 /*
 Reset the pointer to the free cell back to index 0

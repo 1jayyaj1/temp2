@@ -1,4 +1,0 @@
-set b 2
-print b
-set c 3
-print c

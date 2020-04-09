@@ -1,4 +1,4 @@
-set b 2
-print b
-set c 3
-print c
+set a 1
+print a
+set y 26
+print y
