@@ -34,3 +34,5 @@ int scheduler();
 Flushes every pcb off the ready queue in the case of a load error
 */
 void emptyReadyQueue();
+
+extern PCB* findVictimPCB(int victimFrame);

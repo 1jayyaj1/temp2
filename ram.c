@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<string.h>
+
 /*
 Stores the index of the next available block of cell
 */
@@ -21,6 +22,17 @@ void removeFromRam (int start, int end){
     {
         ram[i] = NULL;
     }
+}
+
+void setRamCell(int ramCell, char* fileLine) {
+    ram[ramCell] = fileLine;
+}
+
+int isFrameFree (int frameNumber){
+    if (ram[frameNumber] == NULL) {
+            return 1;
+    }
+    return -1;
 }
 
 /*
@@ -66,4 +78,12 @@ void resetRAM(){
     nextFree = 0;
 }
 
-
+void printRam() {
+    for (int i = 0; i < 40; i++) {
+        if (ram[i] == NULL) {
+            printf("Ram line %d contains: %s\n", i, ram[i]);
+        } else {
+            printf("Ram line %d contains: %s", i, ram[i]);
+        }
+    }
+}

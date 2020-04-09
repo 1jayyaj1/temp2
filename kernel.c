@@ -24,6 +24,7 @@ ReadyQueueNode* tail = NULL;
 int sizeOfQueue = 0;
 
 void boot() {
+    resetRAM();
     char command[50];
     strcpy(command, "rm -rf BackingStore && mkdir BackingStore");
     system(command);
@@ -84,6 +85,19 @@ struct PCB* pop(){
     return topNode;
 }
 
+PCB* findVictimPCB(int victimFrame) {
+    ReadyQueueNode* curr = head;
+    PCB* pcb;
+    while (curr) {
+        for (int i = 0; i < 10; i++) {
+            if (curr->PCB->pageTable[i] == victimFrame) {
+                pcb = curr->PCB;
+            }
+        }
+        curr = curr->next;
+    }
+    return pcb;
+}
 /*
 Passes a filename
 Opens the file, copies the content in the RAM.
@@ -110,6 +124,7 @@ PCB* myinit(int pages_max, int PID){
         // addToReady(pcb);
     // return 0;
     PCB* pcb = makePCB(pages_max, PID);
+    addToReady(pcb);
     return pcb;
 }
 

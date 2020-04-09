@@ -30,6 +30,9 @@ PCB* makePCB(int pages_max, int PID){
     pcb->PC_offset = 0;
     pcb->PID = PID;
     pcb->pages_max = pages_max;
+    for (int i = 0; i < 10; i++) {
+        pcb->pageTable[i] = -1;
+    }
     return pcb;
 }
 
