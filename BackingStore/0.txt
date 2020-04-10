@@ -1,8 +1,7 @@
-set f 6
-print f
-set g 7
-print g
+set a 1
+print a
+set b 2
+print b
+set c 3
+print c
 set h 8
-print h
-set i 9
-print i

@@ -1,8 +1,0 @@
-set f 6
-print f
-set g 7
-print g
-set h 8
-print h
-set i 9
-print i

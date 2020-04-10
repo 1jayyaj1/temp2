@@ -88,6 +88,10 @@ void loadPage(int pageNumber, FILE *f, int frameNumber) {
         }
         i++;
     }
+    while (j != 4) {
+        setRamCell(4 * frameNumber + j, "-1\n");
+        j++;
+    }
     fclose(f);
 }
 
@@ -110,7 +114,7 @@ int launcher(FILE *p) {
     FILE *bs_file = fopen(new_file, "r");
     int pages_max = countTotalPages(bs_file);
     PCB* pcb = myinit(pages_max, currPid);
-    int pageNumber = pcb->PC_page;
+    int pageNumber = 0;
     int frameNumber = findFrame();
     if (frameNumber == -1) {
         frameNumber = findVictim(pcb);
@@ -120,7 +124,13 @@ int launcher(FILE *p) {
     }
     FILE *to_load = fopen(new_file, "r");
     loadPage(pageNumber, to_load, frameNumber);
+    if (pages_max > 1) {
+        pageNumber = 1;
+        frameNumber = findFrame();
+        updatePageTable(pcb, pageNumber, frameNumber, -1);
+        FILE *to_load = fopen(new_file, "r");
+        loadPage(pageNumber, to_load, frameNumber);
+    }
     currPid++;
-    //printRam();
     return 1; //Don't forget to return a 0 whenever this fct can fuck up so that I can handle it in interpreter.c
 }

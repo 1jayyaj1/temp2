@@ -28,9 +28,10 @@ int run(int quanta){
     for (int i = 0; i < quanta; i++)
     {
         strcpy(CPU.IR,ram[(4*CPU.IP)+CPU.offset]);
-        printf("Curr ram line executed by cpu: %d\n", CPU.IP+CPU.offset);
-        //printf("CPU executing current line: %s\n", CPU.IR);
-        int errorCode = parse(CPU.IR);
+        int errorCode = 0;
+        if (CPU.IR[0] != '-' && CPU.IR[0] != '1') {
+            errorCode = parse(CPU.IR);
+        }
         // Do error checking and if error, return error
         if (errorCode != 0){
             // Display error message if fatal

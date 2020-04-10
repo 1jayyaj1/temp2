@@ -135,7 +135,6 @@ int interrupt(PCB* pcb) {
             FILE *to_load = fopen(curr_file, "r"); 
             loadPage(next_page, to_load, next_frame);
             fclose(to_load);
-            //printRam();
         }
         pcb->PC_page = next_page;
         pcb->PC_offset = 0;
@@ -154,9 +153,7 @@ int scheduler(){
         PCB* pcb = pop();
         //copy PC of PCB to IP of CPU
         CPU.IP = pcb->pageTable[pcb->PC_page];
-        printf("Current IP is: %d\n", CPU.IP);
         CPU.offset = pcb->PC_offset;
-        printf("Current Offset is: %d\n", CPU.offset);
         int isOver = FALSE;
         int remaining = 0;
         int quanta = DEFAULT_QUANTA;
