@@ -31,13 +31,13 @@ void boot() {
     system(command);
 }
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]) {
     int error = 0;
     boot();
     error = kernel();
     return error;
 }
+
 /*
 Adds a pcb to the tail of the linked list
 */
@@ -58,7 +58,7 @@ void addToReady(struct PCB* pcb) {
 /*
 Returns the size of the queue
 */
-int size(){
+int size() {
     return sizeOfQueue;
 }
 
@@ -67,7 +67,7 @@ Pops the pcb at the head of the linked list.
 pop will cause an error if linkedlist is empty.
 Always check size of queue using size()
 */
-struct PCB* pop(){
+struct PCB* pop() {
     PCB* topNode = head->PCB;
     ReadyQueueNode * temp = head;
     if (head == tail){
@@ -94,24 +94,15 @@ PCB* findVictimPCB(int victimFrame) {
     }
     return pcb;
 }
-/*
-Passes a filename
-Opens the file, copies the content in the RAM.
-Creates a PCB for that program.
-Adds the PCB on the ready queue.
-Return an errorCode:
-ERRORCODE 0 : NO ERROR
-ERRORCODE -3 : SCRIPT NOT FOUND
-ERRORCODE -5 : NOT ENOUGH RAM (EXEC)
-*/
-PCB* myinit(int pages_max, int PID){
+
+PCB* myinit(int pages_max, int PID) {
     PCB* pcb = makePCB(pages_max, PID);
     addToReady(pcb);
     return pcb;
 }
 
 int interrupt(PCB* pcb) {
-    //TO IMPLEMENT
+    int errorCode = 0;
     int next_page = pcb->PC_page + 1;
     if (next_page >= pcb->pages_max) {
         for (int i = 0; i < 10; i++) {
@@ -120,7 +111,7 @@ int interrupt(PCB* pcb) {
             }
         }
         free(pcb);
-        return 0;
+        return errorCode;
     } else {
         if (pcb->pageTable[next_page] == -1) {
             int next_frame = findFrame();
@@ -132,7 +123,11 @@ int interrupt(PCB* pcb) {
             }
             char curr_file[50];
             snprintf(curr_file, sizeof(curr_file), "./BackingStore/%d.txt", pcb->PID);
-            FILE *to_load = fopen(curr_file, "r"); 
+            FILE *to_load = fopen(curr_file, "r");
+            if (to_load == NULL) { 
+                errorCode = -3;
+                return errorCode;
+            } 
             loadPage(next_page, to_load, next_frame);
             fclose(to_load);
         }
@@ -141,23 +136,21 @@ int interrupt(PCB* pcb) {
         pcb->PC = pcb->PC_page + pcb->PC_offset;
         addToReady(pcb);
     }
-    return 0;
+    return errorCode;
 }
 
-int scheduler(){
-    // set CPU quanta to default, IP to -1, IR = NULL
+int scheduler() {
+    int errorCode = 0;
     CPU.quanta = DEFAULT_QUANTA;
     CPU.IP = -1;
-    while (size() != 0){
-        //pop head of queue
+    while (size() != 0) {
         PCB* pcb = pop();
-        //copy PC of PCB to IP of CPU
         CPU.IP = pcb->pageTable[pcb->PC_page];
         CPU.offset = pcb->PC_offset;
         int isOver = FALSE;
         int remaining = 0;
         int quanta = DEFAULT_QUANTA;
-        int errorCode = run(quanta);
+        errorCode = run(quanta);
         if ( errorCode!=0 ){
             for (int i = 0; i < 10; i++) {
                 if (pcb->pageTable[i] != -1) {
@@ -167,25 +160,22 @@ int scheduler(){
             free(pcb);
         } 
         if (CPU.offset == 4) {
-            //PC_page = 0, PC_offset = 4, PC = PC_page = 0 (not updated yet)
-            interrupt(pcb);
-            //PC_page = 1, PC_offset = 0, PC = 1 + 0 = 0
+            errorCode = interrupt(pcb);
         } else {
             pcb->PC_offset = CPU.offset;
             pcb->PC = pcb->PC_page + pcb->PC_offset;
             addToReady(pcb);
         }
     }
-    // reset RAM
     resetRAM();
-    return 0;
+    return errorCode;
 }
 
 /*
 Flushes every pcb off the ready queue in the case of a load error
 */
-void emptyReadyQueue(){
-    while (head!=NULL){
+void emptyReadyQueue() {
+    while (head!=NULL) {
         ReadyQueueNode * temp = head;
         head = head->next;
         free(temp->PCB);
@@ -193,4 +183,3 @@ void emptyReadyQueue(){
     }
     sizeOfQueue =0;
 }
-

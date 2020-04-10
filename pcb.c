@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 /*
-PCB has 3 fields
-PC : Points to the the current line reached for that program
-start: Points to first line of that program
-end: Points to last line of that program
+PCB has 6 fields
 */
 typedef struct PCB
 {
@@ -17,11 +15,7 @@ typedef struct PCB
 }PCB;
 
 /*
-Passes 2 parameters (start , end)
-This method creates a PCB with fields set as this:
-PC = start
-start = start
-end = end
+This method creates a PCB
 */
 PCB* makePCB(int pages_max, int PID){
     PCB* pcb = (PCB*)malloc(sizeof(PCB));
@@ -31,9 +25,7 @@ PCB* makePCB(int pages_max, int PID){
     pcb->PID = PID;
     pcb->pages_max = pages_max;
     for (int i = 0; i < 10; i++) {
-        pcb->pageTable[i] = -1;
+        pcb->pageTable[i] = -1; // Initializes all entries of page table to -1 which means empty
     }
     return pcb;
 }
-
-

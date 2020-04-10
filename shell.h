@@ -13,4 +13,3 @@ void displayCode(int errorCode,char* command);
 int parse(char ui[]);
 
 int kernel();
-

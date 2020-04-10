@@ -1,8 +1,0 @@
-set d 4
-print d
-set e 5
-print e
-set f 6
-print f
-set g 7
-print g
