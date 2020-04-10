@@ -83,30 +83,18 @@ int exec(char * words[]) {
     char * filename[3] = { "_NONE_", "_NONE_", "_NONE_"};
     int nextFree = 0;
     int errorCode = 0;
-    for (int i = 1; i <= 3; i++)
-    {
+    for (int i = 1; i <= 3; i++) {
         if ( strcmp(words[i],"_NONE_") != 0 ) {
-            int duplicate = FALSE;
-            for (int j = 0; j<i-1; j++){
-                if ( strcmp(filename[j],words[i]) == 0 ) {
-                    duplicate = TRUE;
-                    break;
-                }
-            }
-            if (duplicate) {
-                displayCode(-6,words[i]);
-            } else {
-                filename[nextFree] = strdup(words[i]);
-                nextFree++;
-                FILE* fp = fopen(words[i],"r");
-                if (fp == NULL) return -3;
-                errorCode = launcher(fp);
-                if ( errorCode < 0){
-                    displayCode(errorCode,words[i]);
-                    printf("EXEC COMMAND ABORTED...\n");
-                    emptyReadyQueue();
-                    return 0;
-                }
+            filename[nextFree] = strdup(words[i]);
+            nextFree++;
+            FILE* fp = fopen(words[i],"r");
+            if (fp == NULL) return -3;
+            errorCode = launcher(fp);
+            if ( errorCode < 0){
+                displayCode(errorCode,words[i]);
+                printf("EXEC COMMAND ABORTED...\n");
+                emptyReadyQueue();
+                return 0;
             }
         // We've ran through every filenames, so get out of the for loop
         } else {

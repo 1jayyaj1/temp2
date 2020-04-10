@@ -84,7 +84,7 @@ void loadPage(int pageNumber, FILE *f, int frameNumber) {
         i++;
     }
     while (j != 4) {
-        setRamCell(4 * frameNumber + j, "-1\n");
+        setRamCell(4 * frameNumber + j, "-1\n"); // "-1" is used to pad the rest of the frame if there are less than 4 LOC left to add from disk to ram
         j++;
     }
     fclose(f);

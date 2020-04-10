@@ -81,6 +81,9 @@ int kernel() {
         errorCode = parse(userinput);
         // If the user entered the "quit" command
         if (errorCode == 1) {
+            char command[50];
+            strcpy(command, "rm -rf BackingStore && mkdir BackingStore");
+            system(command);
             printf("Bye!\n");
             break;
             //else if an error occurred, display what that error is
