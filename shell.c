@@ -67,7 +67,7 @@ users gets to use the shell.
 */
 int kernel() {
     char prompt[100] = {'$', ' ', '\0'};
-    printf("Kernel 2.0 loaded!\n");
+    printf("Kernel loaded!\n");
     printf("Welcome to the JayJay Shell!\n");
     printf("Shell version 3.0 Updated April 2020\n");
     char userinput[1000];
