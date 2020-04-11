@@ -1,7 +1,3 @@
 set a 1
 print a
-set b 2
-print b
-set c 3
-print c
-set h 8
+set b 11
